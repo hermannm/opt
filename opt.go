@@ -1,5 +1,9 @@
 package opt
 
+import (
+	"fmt"
+)
+
 type Option[T any] struct {
 	hasValue bool
 	Value    T
@@ -41,4 +45,12 @@ func (option Option[T]) IsEmpty() bool {
 
 func (option Option[T]) Get() (value T, ok bool) {
 	return option.Value, option.hasValue
+}
+
+func (option Option[T]) String() string {
+	if option.hasValue {
+		return fmt.Sprint(option.Value)
+	} else {
+		return "<empty>"
+	}
 }
