@@ -1,7 +1,9 @@
 package opt
 
 import (
+	"encoding/json"
 	"fmt"
+	"slices"
 )
 
 type Option[T any] struct {
@@ -53,4 +55,26 @@ func (option Option[T]) String() string {
 	} else {
 		return "<empty>"
 	}
+}
+
+func (option Option[T]) MarshalJSON() ([]byte, error) {
+	if option.hasValue {
+		return json.Marshal(option.Value)
+	} else {
+		// We don't return the jsonNull slice from below here, since we don't want to risk it being
+		// modified
+		return []byte("null"), nil
+	}
+}
+
+var jsonNull = []byte("null")
+
+func (option *Option[T]) UnmarshalJSON(bytes []byte) error {
+	if slices.Equal(bytes, jsonNull) {
+		option.hasValue = false
+		return nil
+	}
+
+	option.hasValue = true
+	return json.Unmarshal(bytes, &option.Value)
 }
