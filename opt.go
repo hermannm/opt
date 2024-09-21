@@ -49,6 +49,15 @@ func (option Option[T]) Get() (value T, ok bool) {
 	return option.Value, option.hasValue
 }
 
+func (option *Option[T]) Put(value T) {
+	option.hasValue = true
+	option.Value = value
+}
+
+func (option *Option[T]) Clear() {
+	*option = Option[T]{hasValue: false}
+}
+
 func (option Option[T]) String() string {
 	if option.hasValue {
 		return fmt.Sprint(option.Value)
