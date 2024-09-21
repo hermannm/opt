@@ -3,7 +3,6 @@ package opt
 import (
 	"encoding/json"
 	"fmt"
-	"slices"
 )
 
 type Option[T any] struct {
@@ -70,20 +69,22 @@ func (option Option[T]) MarshalJSON() ([]byte, error) {
 	if option.hasValue {
 		return json.Marshal(option.Value)
 	} else {
-		// We don't return the jsonNull slice from below here, since we don't want to risk it being
-		// modified
-		return []byte("null"), nil
+		return []byte{'n', 'u', 'l', 'l'}, nil
 	}
 }
 
-var jsonNull = []byte("null")
-
 func (option *Option[T]) UnmarshalJSON(bytes []byte) error {
-	if slices.Equal(bytes, jsonNull) {
+	isNull := len(bytes) == 4 &&
+		bytes[0] == 'n' &&
+		bytes[1] == 'u' &&
+		bytes[2] == 'l' &&
+		bytes[3] == 'l'
+
+	if isNull {
 		option.hasValue = false
 		return nil
+	} else {
+		option.hasValue = true
+		return json.Unmarshal(bytes, &option.Value)
 	}
-
-	option.hasValue = true
-	return json.Unmarshal(bytes, &option.Value)
 }
