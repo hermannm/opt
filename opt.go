@@ -18,6 +18,19 @@ func Empty[T any]() Option[T] {
 	}
 }
 
+func FromPointer[T any](pointer *T) Option[T] {
+	if pointer == nil {
+		return Option[T]{
+			hasValue: false,
+		}
+	} else {
+		return Option[T]{
+			hasValue: true,
+			Value:    *pointer,
+		}
+	}
+}
+
 func (option Option[T]) HasValue() bool {
 	return option.hasValue
 }
