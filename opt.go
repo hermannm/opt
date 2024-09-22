@@ -10,6 +10,8 @@ import (
 // [Empty] or [FromPointer]. You can check if an option contains a value or is empty with
 // [Option.HasValue] or [Option.IsEmpty], and access the value through the [Option.Value] field.
 //
+// The zero value of Option is an empty option.
+//
 // An empty option marshals to `null` in JSON, and a `null` JSON value unmarshals to an empty
 // option.
 type Option[T any] struct {

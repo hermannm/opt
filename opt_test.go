@@ -90,6 +90,14 @@ func TestClear(t *testing.T) {
 	}
 }
 
+func TestZeroValue(t *testing.T) {
+	var option opt.Option[string]
+
+	if !option.IsEmpty() {
+		t.Error("IsEmpty: want true")
+	}
+}
+
 type stringer struct {
 	value string
 }
