@@ -35,7 +35,7 @@ the value is optional.
 
   ```go
   name := opt.Empty[string]()
-  if (name.IsEmpty()) {
+  if name.IsEmpty() {
       fmt.Println("No name given")
   }
   ```
