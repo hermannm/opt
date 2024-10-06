@@ -79,6 +79,18 @@ func (option *Option[T]) Clear() {
 	*option = Option[T]{hasValue: false}
 }
 
+// ToPointer returns nil if the option is empty, otherwise it returns a pointer to the option's
+// value.
+//
+// It is meant to be used for compatibility with libraries that use pointers for optional values.
+func (option Option[T]) ToPointer() *T {
+	if option.hasValue {
+		return &option.Value
+	} else {
+		return nil
+	}
+}
+
 // String returns the string representation of the option's value. If the option is empty, it
 // returns the string `<empty>` (similar to the string representation `<nil>` for nil pointers).
 func (option Option[T]) String() string {

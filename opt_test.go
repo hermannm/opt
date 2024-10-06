@@ -126,6 +126,27 @@ func TestEmptyString(t *testing.T) {
 	}
 }
 
+func TestValueToPointer(t *testing.T) {
+	option := opt.Value("test")
+	pointer := option.ToPointer()
+
+	if pointer == nil {
+		t.Fatalf("ToPointer() = nil, want 'test'")
+	}
+	if *pointer != "test" {
+		t.Errorf("ToPointer() = %s, want 'test'", *pointer)
+	}
+}
+
+func TestEmptyToPointer(t *testing.T) {
+	option := opt.Empty[string]()
+	pointer := option.ToPointer()
+
+	if pointer != nil {
+		t.Fatalf("ToPointer() = %v, want nil", pointer)
+	}
+}
+
 type jsonObject struct {
 	Field1 opt.Option[string] `json:"field1"`
 	Field2 opt.Option[string] `json:"field2"`
