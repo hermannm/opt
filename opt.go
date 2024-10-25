@@ -67,6 +67,16 @@ func (option Option[T]) Get() (value T, ok bool) {
 	return option.Value, option.hasValue
 }
 
+// GetOrDefault returns the option's value if present, or the given default value if the option is
+// empty.
+func (option Option[T]) GetOrDefault(defaultValue T) T {
+	if option.hasValue {
+		return option.Value
+	} else {
+		return defaultValue
+	}
+}
+
 // Put replaces the current value of the option, if any, with the given value. After this call,
 // [Option.HasValue] will return true.
 func (option *Option[T]) Put(value T) {

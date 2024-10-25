@@ -67,6 +67,22 @@ func TestFromNilPointer(t *testing.T) {
 	}
 }
 
+func TestGetOrDefault(t *testing.T) {
+	option := opt.Empty[string]()
+
+	value1 := option.GetOrDefault("default")
+	if value1 != "default" {
+		t.Errorf("GetOrDefault = %s; want 'default'", value1)
+	}
+
+	option.Put("value")
+
+	value2 := option.GetOrDefault("default")
+	if value2 != "value" {
+		t.Errorf("GetOrDefault = %s; want 'value'", value2)
+	}
+}
+
 func TestPut(t *testing.T) {
 	option := opt.Empty[string]()
 	option.Put("test")
