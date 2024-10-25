@@ -1,6 +1,7 @@
 package opt_test
 
 import (
+	"database/sql"
 	"encoding/json"
 	"testing"
 
@@ -90,11 +91,74 @@ func TestClear(t *testing.T) {
 	}
 }
 
+func TestValueToPointer(t *testing.T) {
+	option := opt.Value("test")
+	pointer := option.ToPointer()
+
+	if pointer == nil {
+		t.Fatalf("ToPointer() = nil, want 'test'")
+	}
+	if *pointer != "test" {
+		t.Errorf("ToPointer() = %s, want 'test'", *pointer)
+	}
+}
+
+func TestEmptyToPointer(t *testing.T) {
+	option := opt.Empty[string]()
+	pointer := option.ToPointer()
+
+	if pointer != nil {
+		t.Fatalf("ToPointer() = %v, want nil", pointer)
+	}
+}
+
 func TestZeroValue(t *testing.T) {
 	var option opt.Option[string]
 
 	if !option.IsEmpty() {
 		t.Error("IsEmpty: want true")
+	}
+}
+
+func TestFromSQLNull(t *testing.T) {
+	var sqlNull sql.Null[string]
+	option := opt.FromSQL(sqlNull)
+
+	if !option.IsEmpty() {
+		t.Error("IsEmpty: want true")
+	}
+}
+
+func TestFromSQLValue(t *testing.T) {
+	sqlValue := sql.Null[string]{Valid: true, V: "test"}
+	option := opt.FromSQL(sqlValue)
+
+	if !option.HasValue() {
+		t.Fatal("HasValue: want true")
+	}
+	if option.Value != sqlValue.V {
+		t.Errorf("Value = %s; want %s", option.Value, sqlValue.V)
+	}
+}
+
+func TestToSQLNull(t *testing.T) {
+	option := opt.Empty[string]()
+	sqlValue := option.ToSQL()
+
+	if sqlValue.Valid {
+		t.Error("Valid: want false")
+	}
+}
+
+func TestToSQLValue(t *testing.T) {
+	option := opt.Value("test")
+	sqlValue := option.ToSQL()
+
+	if !sqlValue.Valid {
+		t.Fatal("Valid: want true")
+	}
+	if option.Value != sqlValue.V {
+		t.Errorf("Value = %s; want %s", option.Value, sqlValue.V)
 	}
 }
 
@@ -123,27 +187,6 @@ func TestEmptyString(t *testing.T) {
 	expected := "<empty>"
 	if string != expected {
 		t.Errorf("String() = %s; want %s", string, expected)
-	}
-}
-
-func TestValueToPointer(t *testing.T) {
-	option := opt.Value("test")
-	pointer := option.ToPointer()
-
-	if pointer == nil {
-		t.Fatalf("ToPointer() = nil, want 'test'")
-	}
-	if *pointer != "test" {
-		t.Errorf("ToPointer() = %s, want 'test'", *pointer)
-	}
-}
-
-func TestEmptyToPointer(t *testing.T) {
-	option := opt.Empty[string]()
-	pointer := option.ToPointer()
-
-	if pointer != nil {
-		t.Fatalf("ToPointer() = %v, want nil", pointer)
 	}
 }
 

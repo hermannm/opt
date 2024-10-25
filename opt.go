@@ -2,6 +2,7 @@
 package opt
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 )
@@ -89,6 +90,21 @@ func (option Option[T]) ToPointer() *T {
 	} else {
 		return nil
 	}
+}
+
+// FromSQL creates an [Option] from the given [sql.Null] value. A null SQL value becomes an empty
+// option, and a non-null SQL value becomes an option containing the value.
+func FromSQL[T any](sql sql.Null[T]) Option[T] {
+	if sql.Valid {
+		return Option[T]{hasValue: true, Value: sql.V}
+	} else {
+		return Option[T]{hasValue: false}
+	}
+}
+
+// ToSQL converts the option to an [sql.Null]. An empty option becomes null.
+func (option Option[T]) ToSQL() sql.Null[T] {
+	return sql.Null[T]{Valid: option.hasValue, V: option.Value}
 }
 
 // String returns the string representation of the option's value. If the option is empty, it
