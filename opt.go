@@ -23,31 +23,23 @@ type Option[T any] struct {
 
 // Value creates an [Option] that contains the given value.
 func Value[T any](value T) Option[T] {
-	return Option[T]{
-		hasValue: true,
-		Value:    value,
-	}
+	return Option[T]{hasValue: true, Value: value}
 }
 
 // Empty creates an empty [Option].
 func Empty[T any]() Option[T] {
-	return Option[T]{
-		hasValue: false,
-	}
+	var value T // Zero value
+	return Option[T]{hasValue: false, Value: value}
 }
 
 // FromPointer creates an [Option] with the value pointed to by the given pointer, dereferencing it.
 // If the pointer is nil, an empty option is returned.
 func FromPointer[T any](pointer *T) Option[T] {
 	if pointer == nil {
-		return Option[T]{
-			hasValue: false,
-		}
+		var value T // Zero value
+		return Option[T]{hasValue: false, Value: value}
 	} else {
-		return Option[T]{
-			hasValue: true,
-			Value:    *pointer,
-		}
+		return Option[T]{hasValue: true, Value: *pointer}
 	}
 }
 
@@ -87,7 +79,8 @@ func (option *Option[T]) Put(value T) {
 // Clear removes the current value of the option, if any. After this call, [Option.IsEmpty] will
 // return true.
 func (option *Option[T]) Clear() {
-	*option = Option[T]{hasValue: false}
+	var value T // Zero value
+	*option = Option[T]{hasValue: false, Value: value}
 }
 
 // ToPointer returns nil if the option is empty, otherwise it returns a pointer to the option's
@@ -105,11 +98,7 @@ func (option Option[T]) ToPointer() *T {
 // FromSQL creates an [Option] from the given [sql.Null] value. A null SQL value becomes an empty
 // option, and a non-null SQL value becomes an option containing the value.
 func FromSQL[T any](sql sql.Null[T]) Option[T] {
-	if sql.Valid {
-		return Option[T]{hasValue: true, Value: sql.V}
-	} else {
-		return Option[T]{hasValue: false}
-	}
+	return Option[T]{hasValue: sql.Valid, Value: sql.V}
 }
 
 // ToSQL converts the option to an [sql.Null]. An empty option becomes null.

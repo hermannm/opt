@@ -188,21 +188,21 @@ func (stringer stringer) String() string {
 
 func TestValueString(t *testing.T) {
 	option := opt.Value(stringer{"test"})
-	string := option.String()
+	optionString := option.String()
 
 	expected := "Value: test"
-	if string != expected {
-		t.Errorf("String() = %s; want %s", string, expected)
+	if optionString != expected {
+		t.Errorf("String() = %s; want %s", optionString, expected)
 	}
 }
 
 func TestEmptyString(t *testing.T) {
 	option := opt.Empty[stringer]()
-	string := option.String()
+	optionString := option.String()
 
 	expected := "<empty>"
-	if string != expected {
-		t.Errorf("String() = %s; want %s", string, expected)
+	if optionString != expected {
+		t.Errorf("String() = %s; want %s", optionString, expected)
 	}
 }
 
