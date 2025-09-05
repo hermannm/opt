@@ -11,7 +11,7 @@ Run `go get hermannm.dev/opt` to add it to your project!
 
 - [Motivation](#motivation)
 - [Usage](#usage)
-- [Developer's guide](#developers-guide)
+- [Maintainer's guide](#maintainers-guide)
 
 ## Motivation
 
@@ -105,9 +105,9 @@ err := json.Unmarshal(jsonInput, &person2)
 ```
 <!-- @formatter:on -->
 
-## Developer's guide
+## Maintainer's guide
 
-When publishing a new release:
+### Publishing a new release
 
 - Run tests and linter ([`golangci-lint`](https://golangci-lint.run/)):
   ```
