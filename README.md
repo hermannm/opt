@@ -99,7 +99,7 @@ jsonOutput, err := json.Marshal(object1)
 // Output: {"name":"hermannm","age":null}
 
 jsonInput := []byte(`{"name":null,"age":25}`)
-var person2 Object
+var person2 Person
 err := json.Unmarshal(jsonInput, &person2)
 // Name is now empty, while Age has value 25
 ```
