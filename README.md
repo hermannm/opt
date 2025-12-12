@@ -95,7 +95,7 @@ person1 := Person{
 	Name: opt.Value("hermannm"),
 	Age:  opt.Empty[int](),
 }
-jsonOutput, err := json.Marshal(object1)
+jsonOutput, err := json.Marshal(person1)
 // Output: {"name":"hermannm","age":null}
 
 jsonInput := []byte(`{"name":null,"age":25}`)
